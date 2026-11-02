@@ -1,0 +1,108 @@
+[
+ {
+  "type": "function",
+  "function": {
+   "name": "submit_patches",
+   "description": "Submit this round's router-bias candidates, most promising first. Each entry adds u units of 0.0001 to the correction bias of expert e in decoder layer l. Selection only: mixing weights keep the unbiased scores. Call it once per round.",
+   "parameters": {
+    "type": "object",
+    "properties": {
+     "notes": {"type": "string", "description": "Notes for your next round, 100 words at most."},
+     "candidates": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "description": "Exactly as many candidates as the user message states, most promising first.",
+      "items": {
+       "type": "object",
+       "properties": {
+        "name": {"type": "string", "description": "Short label, 1 to 24 characters."},
+        "hypothesis": {"type": "string", "description": "One sentence: what this candidate tests."},
+        "entries": {
+         "type": "array",
+         "minItems": 1,
+         "maxItems": 64,
+         "items": {
+          "type": "object",
+          "properties": {
+           "l": {"type": "integer", "minimum": 3, "maximum": 51, "description": "MoE decoder layer."},
+           "e": {"type": "integer", "minimum": 0, "maximum": 255, "description": "Expert id."},
+           "u": {"type": "integer", "minimum": -200, "maximum": 200, "description": "Bias change in units of 0.0001. Nonzero."}
+          },
+          "required": ["l", "e", "u"],
+          "additionalProperties": false
+         }
+        }
+       },
+       "required": ["name", "hypothesis", "entries"],
+       "additionalProperties": false
+      }
+     }
+    },
+    "required": ["notes", "candidates"],
+    "additionalProperties": false
+   }
+  }
+ },
+ {
+  "type": "function",
+  "function": {
+   "name": "expert_stats",
+   "description": "Look up experts of one layer, from search-task tokens: base selection rate, risk difference inside each prompt condition, rate in the tokens before the tamper call, the honesty-instruction shift, the token-local map value, and the first-order dose curve (share of tokens where the expert is added or removed at 10, 30 and 100 units). Uses one of the round's 4 lookups.",
+   "parameters": {
+    "type": "object",
+    "properties": {
+     "l": {"type": "integer", "minimum": 3, "maximum": 51, "description": "MoE decoder layer."},
+     "experts": {"type": "array", "minItems": 1, "maxItems": 16, "items": {"type": "integer", "minimum": 0, "maximum": 255}}
+    },
+    "required": ["l", "experts"],
+    "additionalProperties": false
+   }
+  }
+ },
+ {
+  "type": "function",
+  "function": {
+   "name": "footprint",
+   "description": "Simulate a draft candidate at first order on search-task tokens: the share of token-layers whose chosen set of 8 experts changes, overall and per patched layer, with its norm and whether it fits the round's budget and footprint cap. Uses one of the round's 4 lookups.",
+   "parameters": {
+    "type": "object",
+    "properties": {
+     "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+       "type": "object",
+       "properties": {
+        "l": {"type": "integer", "minimum": 3, "maximum": 51},
+        "e": {"type": "integer", "minimum": 0, "maximum": 255},
+        "u": {"type": "integer", "minimum": -200, "maximum": 200}
+       },
+       "required": ["l", "e", "u"],
+       "additionalProperties": false
+      }
+     }
+    },
+    "required": ["entries"],
+    "additionalProperties": false
+   }
+  }
+ },
+ {
+  "type": "function",
+  "function": {
+   "name": "pick_final",
+   "description": "After the last round: name the one scored candidate of yours that you judge most likely to hold up on new tasks, and say why.",
+   "parameters": {
+    "type": "object",
+    "properties": {
+     "name": {"type": "string", "description": "The assigned name of one of your scored candidates, such as beam_r03a."},
+     "why": {"type": "string", "description": "Your reason, 100 words at most."}
+    },
+    "required": ["name", "why"],
+    "additionalProperties": false
+   }
+  }
+ }
+]

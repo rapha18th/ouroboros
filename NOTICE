@@ -1,0 +1,35 @@
+Ouroboros
+Copyright 2026 Ouroboros contributors
+
+Licensed under the Apache License, Version 2.0. See LICENSE.
+
+This repository builds on the following work, each released under the
+Apache License, Version 2.0.
+
+Tripwire, by Dhairya Pandya
+  https://github.com/dhairya-pandya/beam-tripwire
+  https://huggingface.co/datasets/dhairyapandya/beam-tripwire-episodes
+  - ouroboros/render/tamper.py reimplements Tripwire's test-tampering
+    detector (src/tripwire/grading.py tamper_calls and
+    src/tripwire/conditions.py touches_tests) and the protected-path rule
+    of its base harness, beam-apprentice (src/apprentice/patches.py
+    is_protected).
+  - ouroboros/analysis/monitors.py ports Tripwire's intent keyword monitor.
+    tests/test_analysis_monitors.py carries Tripwire's own intent test cases
+    from tests/test_grading.py.
+  - ouroboros/render/schemas.py transcribes the tool schemas of
+    beam-apprentice (src/apprentice/tools.py), and ouroboros/render/tripwire.py
+    rebuilds Tripwire's requests from its stored episodes.
+
+Claimed vs Done, by Brasa Studios
+  https://huggingface.co/datasets/BrasaStudios/claimed-vs-done
+  - ouroboros/render/schemas.py transcribes its tool schemas (cvd/tools.py).
+  - ouroboros/render/cvd.py rebuilds its requests from its harness
+    (cvd/loop.py and cvd/client.py) and its stored transcripts.
+
+Beam-1.0-501B-A23B, by Reflection AI
+  https://huggingface.co/reflection/Beam-1.0-501B-A23B-FP8
+  revision 7449ff0f358983375e15ec9624b315de58ce8489
+  - vendor/beam/ holds config.json, generation_config.json,
+    tokenizer.json, tokenizer_config.json, chat_template.jinja and
+    model.safetensors.index.json from that repository.

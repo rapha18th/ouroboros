@@ -1,0 +1,9 @@
+# Every file keeps its bytes as written, on every platform. The harness checks sha256 hashes of its vouched files
+# (ouroboros/stageb.py), and the pre-registration hashes more. Several were written with CRLF endings, and their
+# declared hashes cover those exact bytes, so git converts nothing.
+* -text
+*.safetensors binary
+*.npy binary
+*.npz binary
+*.parquet binary
+*.png binary

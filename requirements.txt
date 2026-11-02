@@ -1,0 +1,20 @@
+# Python 3.12. Versions match the development venv.
+# On the GPU VM, install torch from the CUDA wheel index that matches the driver first, e.g.
+#   pip install torch==2.9.0 --index-url https://download.pytorch.org/whl/cu128
+torch==2.9.0
+# Native transformers.models.beam lives on main; pinned to the commit we test against.
+transformers @ git+https://github.com/huggingface/transformers@95bafdcccfffe17ec383999fc39273867b11385e
+safetensors==0.8.0
+tokenizers==0.23.3
+huggingface_hub==2.3.0
+jinja2==3.1.6
+numpy==2.4.6
+scikit-learn==1.9.0
+pyarrow==23.0.1
+# GCS weight streaming: application-default credentials (metadata server on the VM).
+# Ranged reads also need the curl binary on PATH (stock on GCE images).
+google-auth==2.56.2
+requests==2.34.2
+
+# Tests
+pytest==9.1.1
